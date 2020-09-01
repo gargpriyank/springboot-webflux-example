@@ -1,0 +1,128 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: springboot-webflux
+  annotations:
+    openshift.io/display-name: Spring Boot Webflux Template
+    description: Start building your next Java Spring application on OpenShift.
+    tags: java,ibm,spring
+    iconClass: icon-java
+message: A Java application is being deployed. To view your deployment navigate to your project.
+labels:
+  template: springboot-webflux
+  app: springboot-webflux
+objects:
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: Exposes and load balances the application pods
+    spec:
+      ports:
+        - name: web
+          port: 8080
+          targetPort: 8080
+      selector:
+        name: "${NAME}"
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+    spec:
+      to:
+        kind: Service
+        name: "${NAME}"
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      name: "${NAME}"
+      labels:
+        name: "${NAME}"
+    spec:
+      selector:
+        matchLabels:
+          app: "${NAME}"
+      replicas: "{REPLICAS}"
+      template:
+        metadata:
+          labels:
+            app: "${NAME}"
+        spec:
+          containers:
+            - name: "${NAME}"
+              image: "${IMAGE_REGISTRY}/${IMAGE_REPO}/${NAME}:${IMAGE_TAG}"
+              ports:
+                - containerPort: 8080
+              resources:
+                limits:
+                  memory: "${MEMORY_LIMIT}"
+              env:
+                - name: JVM_OPTS
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}-secret"
+                      key: jvm-secret
+                - name: MONGO_DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}-secret"
+                      key: mongo-db-url
+                - name: MONGO_DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}-secret"
+                      key: mongo-db-name
+                - name: ES_KAFKA_SERVICE
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}-secret"
+                      key: es_kafka_service_name
+                - name: ES_KAFKA_TOPIC_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}-secret"
+                      key: es_kafka_topic_name
+              volumeMounts:
+                - name: keystore-cert
+                  mountPath: /etc/keystore/cert/
+                  readOnly: true
+          volumes:
+            - name: keystore-cert
+              secret:
+                secretName: "${NAME}-keystore-cert-secret"
+parameters:
+  - name: NAME
+    displayName: Name
+    description: The name for application and associated objects. Lowercase letters,
+      numbers, and '-' only.
+    required: true
+    value: springboot-webflux
+    from: "[a-z0-9-]{40}"
+  - name: MEMORY_LIMIT
+    displayName: Memory Limit
+    description: Maximum amount of memory the container can use. Using the default value
+      should work out of the box. You can modify this if you want to limit or extend
+      the memory further.
+    required: true
+    value: 512Mi
+  - name: REPLICAS
+    displayName: REPLICAS
+    description: Number of active application pods.
+    required: true
+    value: "2"
+  - name: IMAGE_REGISTRY
+    displayName: IMAGE_REGISTRY
+    description: Application image registry URL.
+    required: true
+    value: "de.icr.io"
+  - name: IMAGE_REPO
+    displayName: IMAGE_REPO
+    description: Application image repository.
+    required: true
+    value: "myrepo"
+  - name: IMAGE_TAG
+    displayName: IMAGE_TAG
+    description: Application image version.
+    required: true
+    value: "latest"
