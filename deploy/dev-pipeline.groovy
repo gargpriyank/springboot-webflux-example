@@ -51,7 +51,7 @@ pipeline {
             cleanUpDockerNoTagImages(appName: "$appName", dockerRegistry: "$dockerRegistryURL")
         }
         failure {
-            emailBuildFailure(appName: "$appName", deployEnv: "$deployEnv", buildNumber: ${currentBuild.number}, recipients: "xyz@abc.com")
+            emailBuildFailure(appName: "$appName", deployEnv: "$deployEnv", buildNumber: "${currentBuild.number}", recipients: "xyz@abc.com")
         }
     }
 }
