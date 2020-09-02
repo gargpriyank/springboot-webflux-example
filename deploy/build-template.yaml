@@ -12,16 +12,6 @@ labels:
   template: springboot-example-build-template
   app: springboot-example
 objects:
-  - kind: ImageStream
-    apiVersion: image.openshift.io/v1
-    metadata:
-      name: "${NAME}"
-      annotations:
-        description: Keeps track of changes in the application image
-    spec:
-      dockerImageRepository: "${IMAGE_REGISTRY}/${IMAGE_REPO}/${NAME}"
-      lookupPolicy:
-        local: false
   - kind: BuildConfig
     apiVersion: build.openshift.io/v1
     metadata:
