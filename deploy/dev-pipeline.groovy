@@ -34,8 +34,6 @@ pipeline {
         stage('Build app jar') {
             steps {
                 script{
-                    sh "ibmcloud cr region-set eu-central"
-                    sh "ibmcloud cr login"
                     sh "oc process -f deploy/build-template.yaml -pNAME=springboot-example -pIMAGE_REGISTRY=de.icr.io -pIMAGE_REPO=infordata_poc_ir" +
                             " -pIMAGE_TAG=latest | oc apply -f -"
                 }
