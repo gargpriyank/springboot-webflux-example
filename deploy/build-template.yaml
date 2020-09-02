@@ -38,7 +38,7 @@ objects:
       strategy:
         type: Source
         dockerStrategy:
-          dockerfilePath: Dockerfile
+          dockerfilePath: deploy/Dockerfile
       output:
         to:
           kind: ImageStreamTag
