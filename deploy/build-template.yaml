@@ -1,0 +1,71 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: springboot-example-build-template
+  annotations:
+    openshift.io/display-name: Spring Boot Build Template
+    description: Start building your next Java Spring application on OpenShift.
+    tags: java,ibm,spring
+    iconClass: icon-java
+message: A Java application is being built.
+labels:
+  template: springboot-example-build-template
+  app: springboot-example
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: Keeps track of changes in the application image
+    spec:
+      dockerImageRepository: "${IMAGE_REGISTRY}/${IMAGE_REPO}/${NAME}"
+      lookupPolicy:
+        local: false
+  - kind: BuildConfig
+    apiVersion: build.openshift.io/v1
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: Defines how to build the application
+        template.alpha.openshift.io/wait-for-ready: 'true'
+    spec:
+      source:
+        type: Git
+        git:
+          uri: 'https://github.com/gargpriyank/springboot-webflux-example.git'
+          ref: master
+      strategy:
+        type: Source
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "${NAME}:${IMAGE_TAG}"
+      triggers:
+        - type: ImageChange
+        - type: ConfigChange
+parameters:
+  - name: NAME
+    displayName: Name
+    description: The name for application and associated objects. Lowercase letters,
+      numbers, and '-' only.
+    required: true
+    value: springboot-example
+    from: "[a-z0-9-]{40}"
+  - name: IMAGE_REGISTRY
+    displayName: IMAGE_REGISTRY
+    description: Application image registry URL.
+    required: true
+    value: "de.icr.io"
+  - name: IMAGE_REPO
+    displayName: IMAGE_REPO
+    description: Application image repository.
+    required: true
+    value: "myrepo"
+  - name: IMAGE_TAG
+    displayName: IMAGE_TAG
+    description: Application image version.
+    required: true
+    value: "latest"

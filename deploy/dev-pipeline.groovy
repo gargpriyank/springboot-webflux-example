@@ -14,7 +14,7 @@ properties([
 def appName = "springboot-webflux"
 def imageTag = "1-0.0.${currentBuild.number}"
 def namespace = "dev"
-def template = "springboot-webflux-template.yaml"
+def template = "deploy-template.yaml"
 def deployEnv = "${params.DeploymentEnv}"
 def memLimit = "${params.MemoryLimit}"
 def numOfPods = "${params.NumOfPods}"
@@ -32,26 +32,10 @@ pipeline {
         stage('Build app jar') {
             steps {
                 buildJarMaven(mvnArgs: '-DskipTests=false')
+                script{
+                    sh "oc process -f build-template.yaml -pNAME=springboot-example -pIMAGE_REGISTRY=de.icr.io -pIMAGE_REPO=infordata_poc_ir -pIMAGE_TAG=latest | oc apply -f -"
+                }
             }
-        }
-        stage('Build and push app image') {
-            steps {
-                buildPushDockerImage(appName: "$appName", imageTag: "$imageTag", dockerRegistry: "$dockerRegistryURL", dockerRepo: "$dockerRepo")
-            }
-        }
-        stage('Deploy app image') {
-            steps {
-                deployOSTemplate(project: "$namespace", templateFullPath: "$template", appName: "$appName", imageRegistryURL: "$dockerRegistryURL",
-                        imageRepo: "$dockerRepo", memLimit: "$memLimit", replicas: "$numOfPods", imageTag: "$imageTag")
-            }
-        }
-    }
-    post {
-        always {
-            cleanUpDockerNoTagImages(appName: "$appName", dockerRegistry: "$dockerRegistryURL")
-        }
-        failure {
-            emailBuildFailure(appName: "$appName", deployEnv: "$deployEnv", buildNumber: "${currentBuild.number}", recipients: "xyz@abc.com")
         }
     }
 }
