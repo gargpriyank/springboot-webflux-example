@@ -33,7 +33,6 @@ pipeline {
     stages {
         stage('Build app jar') {
             steps {
-                buildJarMaven(mvnArgs: '-DskipTests=false')
                 script{
                     sh "oc process -f deploy/build-template.yaml -pNAME=springboot-example -pIMAGE_REGISTRY=de.icr.io -pIMAGE_REPO=infordata_poc_ir" +
                             " -pIMAGE_TAG=latest | oc apply -f -"
