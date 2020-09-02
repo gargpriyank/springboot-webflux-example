@@ -41,8 +41,8 @@ objects:
           dockerfilePath: deploy/Dockerfile
       output:
         to:
-          kind: ImageStreamTag
-          name: "${NAME}:${IMAGE_TAG}"
+          kind: DockerImage
+          name: "${IMAGE_REGISTRY}/${IMAGE_REPO}/${NAME}:${IMAGE_TAG}"
       triggers:
         - type: ImageChange
         - type: ConfigChange
