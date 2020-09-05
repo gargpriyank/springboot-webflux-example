@@ -23,15 +23,24 @@ def dockerRepo = "${params.ContainerRegistryNamespace}"
 
 pipeline {
 
-    agent any
-    tools{
-        maven 'mvn'
+    agent {
+        label 'docker-mvn'
     }
     options {
         timeout(time: 30, unit: 'MINUTES')
     }
     stages {
+        stage('Initialize') {
+            steps {
+                gitCheckout(gitURL: 'https://github.com/gargpriyank/springboot-webflux-example.git', gitBranch: 'master')
+            }
+        }
         stage('Build app jar') {
+            steps {
+                buildJarMaven(mvnArgs: '-DskipTests')
+            }
+        }
+        stage('Deploy app') {
             steps {
                 script{
                     sh "oc process -f deploy/build-template.yaml -pNAME=springboot-example -pIMAGE_REGISTRY=de.icr.io -pIMAGE_REPO=infordata_poc_ir" +
