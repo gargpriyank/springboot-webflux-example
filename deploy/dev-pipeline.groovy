@@ -24,7 +24,7 @@ def dockerRepo = "${params.ContainerRegistryNamespace}"
 pipeline {
 
     agent {
-        label 'docker-mvn'
+        label 'maven'
     }
     options {
         timeout(time: 30, unit: 'MINUTES')
