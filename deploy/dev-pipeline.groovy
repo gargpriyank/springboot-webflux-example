@@ -37,7 +37,7 @@ pipeline {
         }
         stage('Build app jar') {
             steps {
-                buildJarMaven(mvnArgs: '-DskipTests')
+                buildJarMaven()
             }
         }
         stage('Deploy app') {
