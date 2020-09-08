@@ -37,16 +37,18 @@ pipeline {
         }
         stage('Build app jar') {
             steps {
-                buildJarMaven()
+                buildJarMaven(mvnArgs: '-DskipTests')
             }
         }
-        stage('Deploy app') {
+        stage('Build and push docker image') {
             steps {
-                script{
-                    sh "oc process -f deploy/build-template.yaml -pNAME=springboot-example -pIMAGE_REGISTRY=de.icr.io -pIMAGE_REPO=infordata_poc_ir" +
-                            " -pIMAGE_TAG=latest | oc apply -f -"
-                }
+                buildPushDockerImage(appName: "$appName", imageTag: "$imageTag", dockerRegistry: "$dockerRegistryURL", dockerRepo: "$dockerRepo")
             }
+        }
+    }
+    post {
+        always {
+            postScript(dockerRegistry: "$dockerRegistryURL")
         }
     }
 }
