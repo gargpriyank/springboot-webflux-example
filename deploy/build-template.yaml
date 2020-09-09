@@ -48,24 +48,24 @@ parameters:
     displayName: IMAGE_REGISTRY
     description: Application image registry URL.
     required: true
-    value: "de.icr.io"
+    value: de.icr.io
   - name: IMAGE_REPO
     displayName: IMAGE_REPO
     description: Application image repository.
     required: true
-    value: "myrepo"
+    value: myrepo
   - name: IMAGE_TAG
     displayName: IMAGE_TAG
     description: Application image version.
     required: true
-    value: "latest"
+    value: latest
   - name: GITHUB_URL
     displayName: GITHUB_URL
     description: Github project URL.
     required: true
-    value: "https://github.com/gargpriyank/springboot-webflux-example.git"
+    value: https://github.com/gargpriyank/springboot-webflux-example.git
   - name: GITHUB_BRANCH
     displayName: GITHUB_BRANCH
     description: Github project branch.
     required: true
-    value: "master"
+    value: master
