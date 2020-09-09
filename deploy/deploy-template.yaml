@@ -35,10 +35,11 @@ objects:
         name: "${NAME}"
   - kind: Deployment
     apiVersion: apps/v1
-    name: "${NAME}"
-    annotations:
-      description: Defines how to deploy the application server
-      template.alpha.openshift.io/wait-for-ready: 'true'
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: Defines how to deploy the application server
+        template.alpha.openshift.io/wait-for-ready: 'true'
     spec:
       selector:
         matchLabels:
