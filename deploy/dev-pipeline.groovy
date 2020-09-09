@@ -11,15 +11,19 @@ properties([
         ])
 ])
 
+def githubURL = "https://github.com/gargpriyank/springboot-webflux-example.git"
+def githubBranch = "master"
 def appName = "springboot-webflux"
 def imageTag = "1-0.0.${currentBuild.number}"
 def namespace = "dev"
-def template = "deploy-template.yaml"
-def deployEnv = "${params.DeploymentEnv}"
+def dockerFilePath = "deploy/Dockerfile"
+def templatePath = "deploy/build-template.yaml"
 def memLimit = "${params.MemoryLimit}"
 def numOfPods = "${params.NumOfPods}"
 def dockerRegistryURL = "${params.ContainerRegistryURL}"
 def dockerRepo = "${params.ContainerRegistryNamespace}"
+def osClusterURL = "https://c100-e.eu-de.containers.cloud.ibm.com:32563"
+def deployEnv = "${params.DeploymentEnv}"
 
 pipeline {
 
@@ -32,7 +36,8 @@ pipeline {
     stages {
         stage('Initialize') {
             steps {
-                gitCheckout(gitURL: 'https://github.com/gargpriyank/springboot-webflux-example.git', gitBranch: 'master')
+                gitCheckout(gitURL: "$githubURL", gitBranch: "$githubBranch")
+                loginOS(clusterURL: "$osClusterURL")
             }
         }
         stage('Build app jar') {
@@ -40,9 +45,18 @@ pipeline {
                 buildJarMaven(mvnArgs: '-DskipTests')
             }
         }
-        stage('Build and push docker image') {
+        stage('Build and push app image') {
             steps {
-                buildPushDockerImage(appName: "$appName", imageTag: "$imageTag", dockerRegistry: "$dockerRegistryURL", dockerRepo: "$dockerRepo")
+                processOSTemplate(project: "$namespace", templateFullPath: "$templatePath", appName: "$appName", dockerRegistry:
+                        "$dockerRegistryURL", dockerRepo: "$dockerRepo", imageTag: "$imageTag", githubURL: "$githubURL",
+                        githubBranch: "$githubBranch")
+            }
+        }
+        stage('Deploy app') {
+            steps {
+                templatePath = "deploy/deploy-template.yaml"
+                processOSTemplate(project: "$namespace", templateFullPath: "$templatePath", appName: "$appName", dockerRegistry:
+                        "$dockerRegistryURL", dockerRepo: "$dockerRepo", memLimit: "$memLimit", replicas: "$numOfPods", imageTag: "$imageTag")
             }
         }
     }

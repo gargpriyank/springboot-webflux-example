@@ -23,8 +23,8 @@ objects:
       source:
         type: Git
         git:
-          uri: 'https://github.com/gargpriyank/springboot-webflux-example.git'
-          ref: master
+          uri: "${GITHUB_URL}"
+          ref: "${GITHUB_BRANCH}"
       strategy:
         type: Source
         dockerStrategy:
@@ -61,3 +61,13 @@ parameters:
     description: Application image version.
     required: true
     value: "latest"
+  - name: GITHUB_URL
+    displayName: GITHUB_URL
+    description: Github project URL.
+    required: true
+    value: "https://github.com/gargpriyank/springboot-webflux-example.git"
+  - name: GITHUB_BRANCH
+    displayName: GITHUB_BRANCH
+    description: Github project branch.
+    required: true
+    value: "master"
