@@ -34,7 +34,7 @@ objects:
           kind: DockerImage
           name: "${IMAGE_REGISTRY}/${IMAGE_REPO}/${NAME}:${IMAGE_TAG}"
         pushSecret:
-          name: de-icr-push-secret
+          name: de-icr-secret
       triggers:
         - type: ImageChange
         - type: ConfigChange

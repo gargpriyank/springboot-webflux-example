@@ -13,7 +13,7 @@ properties([
 
 def githubURL = "https://github.com/gargpriyank/springboot-webflux-example.git"
 def githubBranch = "master"
-def appName = "springboot-webflux"
+def appName = "springboot-example"
 def imageTag = "1-0.0.${currentBuild.number}"
 def namespace = "dev"
 def dockerFilePath = "deploy/Dockerfile"
