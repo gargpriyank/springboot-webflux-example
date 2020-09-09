@@ -17,7 +17,6 @@ def appName = "springboot-webflux"
 def imageTag = "1-0.0.${currentBuild.number}"
 def namespace = "dev"
 def dockerFilePath = "deploy/Dockerfile"
-def templatePath = "deploy/build-template.yaml"
 def memLimit = "${params.MemoryLimit}"
 def numOfPods = "${params.NumOfPods}"
 def dockerRegistryURL = "${params.ContainerRegistryURL}"
@@ -40,22 +39,16 @@ pipeline {
                 loginOS(clusterURL: "$osClusterURL")
             }
         }
-        stage('Build app jar') {
-            steps {
-                buildJarMaven(mvnArgs: '-DskipTests')
-            }
-        }
         stage('Build and push app image') {
             steps {
-                processOSTemplate(project: "$namespace", templateFullPath: "$templatePath", appName: "$appName", dockerRegistry:
+                processOSTemplate(project: "$namespace", templateFullPath: 'deploy/build-template.yaml', appName: "$appName", dockerRegistry:
                         "$dockerRegistryURL", dockerRepo: "$dockerRepo", imageTag: "$imageTag", githubURL: "$githubURL",
                         githubBranch: "$githubBranch")
             }
         }
         stage('Deploy app') {
             steps {
-                templatePath = "deploy/deploy-template.yaml"
-                processOSTemplate(project: "$namespace", templateFullPath: "$templatePath", appName: "$appName", dockerRegistry:
+                processOSTemplate(project: "$namespace", templateFullPath: 'deploy/deploy-template.yaml', appName: "$appName", dockerRegistry:
                         "$dockerRegistryURL", dockerRepo: "$dockerRepo", memLimit: "$memLimit", replicas: "$numOfPods", imageTag: "$imageTag")
             }
         }
