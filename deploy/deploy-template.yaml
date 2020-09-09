@@ -43,7 +43,7 @@ objects:
       selector:
         matchLabels:
           app: "${NAME}"
-      replicas: "${REPLICAS}"
+      replicas: "${{REPLICAS}}"
       template:
         metadata:
           labels:
