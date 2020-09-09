@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
-  name: springboot-example-build-template
+  name: springboot-webflux-example-build-template
   annotations:
     openshift.io/display-name: Spring Boot Build Template
     description: Start building your next Java Spring application on OpenShift.
@@ -9,8 +9,8 @@ metadata:
     iconClass: icon-java
 message: A Java application is being built.
 labels:
-  template: springboot-example-build-template
-  app: springboot-example
+  template: springboot-webflux-example-build-template
+  app: springboot-webflux-example
 objects:
   - kind: BuildConfig
     apiVersion: build.openshift.io/v1
@@ -44,7 +44,7 @@ parameters:
     description: The name for application and associated objects. Lowercase letters,
       numbers, and '-' only.
     required: true
-    value: springboot-example
+    value: springboot-webflux-example
     from: "[a-z0-9-]{40}"
   - name: IMAGE_REGISTRY
     displayName: IMAGE_REGISTRY

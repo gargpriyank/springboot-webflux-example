@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
-  name: springboot-example-deploy-template
+  name: springboot-webflux-example-deploy-template
   annotations:
     openshift.io/display-name: Spring Boot Deploy Template
     description: Start building your next Java Spring application on OpenShift.
@@ -9,8 +9,8 @@ metadata:
     iconClass: icon-java
 message: A Java application is being deployed. To view your deployment navigate to your project.
 labels:
-  template: springboot-example-deploy-template
-  app: springboot-example
+  template: springboot-webflux-example-deploy-template
+  app: springboot-webflux-example
 objects:
   - kind: Service
     apiVersion: v1
@@ -97,7 +97,7 @@ parameters:
     description: The name for application and associated objects. Lowercase letters,
       numbers, and '-' only.
     required: true
-    value: springboot-example
+    value: springboot-webflux-example
     from: "[a-z0-9-]{40}"
   - name: MEMORY_LIMIT
     displayName: Memory Limit
