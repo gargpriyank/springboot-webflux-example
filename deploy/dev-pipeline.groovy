@@ -16,12 +16,12 @@ def githubBranch = "master"
 def appName = "springboot-webflux-example"
 def imageTag = "1-0.0.${currentBuild.number}"
 def namespace = "dev"
-def dockerFilePath = "deploy/Dockerfile"
 def memLimit = "${params.MemoryLimit}"
 def numOfPods = "${params.NumOfPods}"
 def dockerRegistryURL = "${params.ContainerRegistryURL}"
 def dockerRepo = "${params.ContainerRegistryNamespace}"
 def osClusterURL = "https://c100-e.eu-de.containers.cloud.ibm.com:32563"
+def dockerFilePath = "deploy/Dockerfile"
 def deployEnv = "${params.DeploymentEnv}"
 
 pipeline {
