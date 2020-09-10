@@ -4,6 +4,7 @@
 - [How to start the application](#how-to-start-the-application)
 - [How to test the application](#how-to-test-the-application)
 - [How to build and push the docker image](#how-to-build-and-push-the-docker-image)
+- [How to deploy the application using Jenkins pipeline](#how-to-deploy-the-application-using-jenkins-pipeline)
 
 ## Application overview
 
@@ -78,6 +79,7 @@ java -Djavax.net.ssl.trustStore=<key_store_full_path>.jks -Djavax.net.ssl.trustS
 The application saves and retrieves employee data and can be accessed through the endpoint `localhost:8080/employee`.
 1. Send a POST request with following JSON to save employee data. The POST request sends the data to Kafka topic. 
 Kafka consumer listens to the message and save it into MongoDB.
+
 ```bash
 {
 	"name": "..",
@@ -85,10 +87,26 @@ Kafka consumer listens to the message and save it into MongoDB.
 	"deptName": "..."
 }
 ```
+
 2. Send a GET request to retrieve all the employees.
 
 ## How to build and push the docker image
+
 ```bash
 docker -t <registry_url>/<repo_name>/<image_name>:<image_version> build .
 docker push <registry_url>/<repo_name>/<image_name>:<image_version>
 ```
+
+## How to deploy the application using Jenkins pipeline
+
+The deploy folder of this project contains the deployment artifacts Dockerfile, build-template.yaml, deploy-template.yaml and dev-pipeline.groovy.
+
+1. **Dockerfile** builds the application image.
+
+2. **build-template.yaml** template contains the build configurations and it builds the application image in OpenShift platform.
+
+3. **deploy-template.yaml** template contains the deploy configurations and it deploys the application image in OpenShift platform.
+
+4. **dev-pipeline.groovy** contains the groovy script for automated build and deployment of application in OpenShift platform.
+   To start the Jenkins pipeline, add OpenShift service account credentials as a variable **os-jenkins-sa-token** in Jenkins credentials, 
+   create the Jenkins pipeline and add the **dev-pipeline .groovy** script.
