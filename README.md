@@ -109,5 +109,5 @@ The deploy folder of this project contains the deployment artifacts Dockerfile, 
 
 4. **dev-pipeline.groovy** contains the groovy script for automated build and deployment of application in OpenShift platform. It uses the groovy
    functions of [Jenkins library](https://github.com/gargpriyank/jenkins-library.git). To start the Jenkins pipeline, add OpenShift service
-   account credentials as a variable **os-jenkins-sa-token** in Jenkins credentials, create the Jenkins pipeline and add the **dev-pipeline .groovy
-   ** script. Run the pipeline.
+   account credentials as a variable **os-jenkins-sa-token** in Jenkins credentials, create the Jenkins pipeline and add the **dev-pipeline.groovy** 
+   script. Run the pipeline.
