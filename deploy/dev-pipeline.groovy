@@ -44,6 +44,9 @@ pipeline {
                 processOSTemplate(project: "$namespace", templateFullPath: 'deploy/build-template.yaml', appName: "$appName", dockerRegistry:
                         "$dockerRegistryURL", dockerRepo: "$dockerRepo", imageTag: "$imageTag", githubURL: "$githubURL",
                         githubBranch: "$githubBranch")
+                script {
+                    sleep(300)
+                }
             }
         }
         stage('Deploy app') {
