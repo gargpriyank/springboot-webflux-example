@@ -14,7 +14,7 @@ properties([
 def githubURL = "https://github.com/gargpriyank/springboot-webflux-example.git"
 def githubBranch = "master"
 def appName = "springboot-webflux-example"
-def imageTag = "1-0.0.${currentBuild.number}"
+def imageTag = "1.0.0.${currentBuild.number}"
 def namespace = "dev"
 def memLimit = "${params.MemoryLimit}"
 def numOfPods = "${params.NumOfPods}"
