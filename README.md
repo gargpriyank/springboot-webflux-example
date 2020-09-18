@@ -101,6 +101,32 @@ docker push <registry_url>/<repo_name>/<image_name>:<image_version>
 
 The deploy folder of this project contains the deployment artifacts Dockerfile, build-template.yaml, deploy-template.yaml and dev-pipeline.groovy.
 
+#### Prerequisites
+
+1. Install OpenShift CLI plugin to run `oc` commands.
+
+2. Either generate a new JKS or copy `/jre/lib/security/cacerts` from JDk installation directory and rename it to `keystore.jks`.
+
+3. Update the JKS password and import the SSL certificate of IBM Databases for MongoDB. 
+IBM Event Streams (Kafka) will use the default JDK certificate.
+```bash
+keytool -storepasswd -keystore keystore.jks
+keytool -importcert -trustcacerts -file mongodb.pem -keystore keystore.jks -alias mongodb -storepass <secure_password>
+```
+
+4. Create application secrets.
+
+```bash
+oc create secret generic springboot-webflux-example-cert-secret --from-file=keystore.jks
+oc create secret generic springboot-webflux-example-secret \
+--from-literal=jvm-secret="-Djavax.net.ssl.trustStore=/etc/keystore/cert/keystore.jks \
+-Djavax.net.ssl.trustStorePassword=<secure_password>" --from-literal=mongo-db-url="<database_url starting with mongodb://>" \
+--from-literal=mongo-db-name="<database_name>" --from-literal=es_kafka_topic_name="<kafka_topic_name>" \
+--from-literal=es_kafka_service_name='<es_kafka_service_creds>'
+```
+
+#### Build and deployment files
+
 1. **Dockerfile** builds the application image.
 
 2. **build-template.yaml** template contains the build configurations and it builds the application image in OpenShift platform.
