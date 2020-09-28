@@ -125,6 +125,16 @@ oc create secret generic springboot-webflux-example-secret \
 --from-literal=es_kafka_service_name='<es_kafka_service_creds>'
 ```
 
+5. This example stores the application image in IBM Container Registry. It uses OpenShift Jenkins as CI/CD tool. Create registry secret and link
+with service account as in below.
+
+```bash
+oc create secret docker-registry <secret_name> --docker-server=de.icr.io --docker-username=<iam_key_name> --docker-password=<iam_key_password> 
+-n <namespace>
+oc secrets link builder <secret_name>
+oc secrets link default <secret_name> --for=pull
+```
+
 #### Build and deployment files
 
 1. **Dockerfile** builds the application image.
